@@ -80,7 +80,7 @@ Identity and Access Management (IAM) for Amazon EMR is essential for executing t
     ]
 }
 ```
-Note: If you do not have the necessary permissions to create or modify IAM roles, please contact your IT team for assistance. They will be able to create the role and attach the required policy. [cite: 87, 88]
+Note: If you do not have the necessary permissions to create or modify IAM roles, please contact your IT team for assistance. They will be able to create the role and attach the required policy.
 
 ### Create EMR Studio (If You Don't Have One)
 EMR Studio is where you'll write and run your notebooks. You need a Studio to create a Workspace.
@@ -148,7 +148,7 @@ EMR Studio is where you'll write and run your notebooks. You need a Studio to cr
     * In the second button of the left sidebar, you will find the section called **Compute**.
     * Select the type named **EMR Serverless application**.
     * Choose your application and the role with the policy you created above
-`
+
 <img src="./img/setup_compute.png">
 
 * In the workspace environment, upload or import the workspace estimator notebook.
