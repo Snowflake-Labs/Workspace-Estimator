@@ -12,7 +12,7 @@ For this communication to work correctly, the EMR Serverless application must be
 * **Security Groups with outbound HTTPS traffic:** The security groups associated with the application must allow outbound traffic on port 443 (HTTPS). This is required as AWS APIs communicate securely using HTTPS.
 
 **What to do if you have problems?**
-If you are unsure if your network configuration meets these requirements, or if you experience connectivity problems when running the notebook, contact your IT team . They can verify and adjust the network configuration to ensure your EMR Serverless application can access AWS APIs correctly.
+If you are unsure if your network configuration meets these requirements, or if you experience connectivity problems when running the notebook, contact your IT team. They can verify and adjust the network configuration to ensure your EMR Serverless application can access AWS APIs correctly.
 
 ## Metrics Collected by the EMR Serverless Estimator
 This notebook is designed to gather key information regarding the usage and associated costs of your AWS EMR Serverless applications and job runs. Upon execution, the following metrics and configurations will be obtained directly from your AWS account:
@@ -42,7 +42,7 @@ This notebook is designed to gather key information regarding the usage and asso
 The tool consolidates data on your resource configuration, actual billed utilization of vCPU, memory, and storage, and associated costs by usage type. This will enable you to accurately analyze and estimate the expenditure of your EMR Serverless workloads, facilitating informed decision-making for optimization. The execution will result in a ZIP file containing all the organized information for your subsequent analysis.
 
 ## Usage of the Output File
-Once the notebook completes its execution, a downloadable ZIP file will be generated containing all the collected information. This file includes several CSV files with EMR Serverless application metrics, job run details, and cost data. This ZIP file is requested to be provided for processing and for the generation of the corresponding analysis reports.
+Once the notebook completes its execution, a downloadable ZIP file will be generated containing all the collected information. This file includes several CSV files with EMR Serverless application metrics, job run details, and cost data. Please provide this ZIP file for processing and report generation.
 
 ## Troubleshooting and Diagnostics (Logs)
 The notebook generates log messages that report progress and potential errors. If the execution is unsuccessful or the output file is not generated, review the cell output in EMR Studio. Log messages with ERROR or WARNING will provide clues about the cause of the issue, such as incorrect permissions or configurations. When requesting support, please include these messages for more efficient diagnosis.
