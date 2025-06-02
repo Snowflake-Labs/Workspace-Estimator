@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=61.0"] # Minimum version of setuptools
+build-backend = "setuptools.build_meta"
+# backend-path = ["."] # Ensures setuptools can find its build backend
+
+[project]
+name = "workspace-estimator" # This is the name used on PyPI and for pip install
+version = "0.3.0"
+authors = [
+  { name="Snowflake", email="erick.cuberojimenez@snowflake.com" },
+]
+description = "Workspace estimator"
+readme = "README.md"
+requires-python = ">=3.10" # Minimum Python version supported
+classifiers = [
+    "Development Status :: 4 - Beta", # "3 - Alpha" Or "4 - Beta", "5 - Production/Stable"
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License", # Match your LICENSE file
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Utilities",
+]
+keywords = ["workspace estimator", "we"] # Keywords for PyPI search
+
+# Optional: Specify dependencies your package needs
+dependencies = [
+    "tqdm",
+    "requests",
+    "pandas"
+]
+
+[project.urls] # Optional: Links that will appear on your PyPI page
+"Homepage" = "https://github.com/"
+"Bug Tracker" = "https://github.com/"
+# "Documentation" = "https://your-docs-url.com"
+
+# --- Configuration for setuptools ---
+# This section is not strictly needed if all info is in [project],
+# but can be useful for more advanced setuptools configurations.
+[tool.setuptools]
+package-dir = {"" = "src"} # Tells setuptools that packages are under src/
+
+# If you want to automatically find packages under src/:
+[tool.setuptools.packages.find]
+where = ["src"]  # look for packages in src
+# include = ["workspace_estimator*"] # include all packages starting with workspace_estimator
+exclude = ["workspace_estimator.tests*"] # optional: exclude test packages
