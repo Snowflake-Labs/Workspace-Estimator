@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 # backend-path = ["."] # Ensures setuptools can find its build backend
 
 [project]
-name = "workspace-estimator" # This is the name used on PyPI and for pip install
-version = "0.7.0"
+name = "workspace-extractor"
+version = "0.0.1"
 authors = [
   { name="Snowflake", email="erick.cuberojimenez@snowflake.com" },
 ]
@@ -24,7 +24,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Utilities",
 ]
-keywords = ["workspace estimator", "we"] # Keywords for PyPI search
+keywords = ["workspace extractor", "we"] # Keywords for PyPI search
 
 # Optional: Specify dependencies your package needs
 dependencies = [
@@ -34,9 +34,9 @@ dependencies = [
 ]
 
 [project.urls] # Optional: Links that will appear on your PyPI page
-"Homepage" = "https://github.com/"
-"Bug Tracker" = "https://github.com/"
-# "Documentation" = "https://your-docs-url.com"
+"Homepage" = "https://github.com/Snowflake-Labs/Workspace-Estimator"
+"Bug Tracker" = "https://github.com/Snowflake-Labs/Workspace-Estimator/issues"
+"Documentation" = "https://github.com/Snowflake-Labs/Workspace-Estimator/blob/main/README.md"
 
 # --- Configuration for setuptools ---
 # This section is not strictly needed if all info is in [project],
