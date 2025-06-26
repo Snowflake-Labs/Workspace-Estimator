@@ -46,7 +46,81 @@ class Manager:
         pb_message=None,
         paging_pb=False,
         full_response=False,
-    ):
+    ) -> tuple[bool, str]:
+        """
+        Fetch data from an API endpoint with pagination support and save results to a file.
+        
+        This method handles API requests (GET/POST), automatic pagination, progress tracking,
+        data aggregation, and file output. It's designed to work with various cloud provider
+        APIs and can handle different pagination mechanisms.
+        
+        Args:
+            path (str, optional): API endpoint path to append to the base URL. If None, 
+                uses url_api directly. Defaults to None.
+            name_output (str): Base name for the output file (without extension). 
+                Defaults to "default_output".
+            array_field (str, optional): JSON field name containing the array data to extract.
+                If None, uses the entire response. Defaults to None.
+            suffix (str): Suffix to append to the output filename. Defaults to "".
+            default_params (dict, optional): Default query parameters for the API request.
+                Defaults to None (empty dict).
+            use_paging (bool): Whether to use pagination for the API requests. 
+                Defaults to False.
+            post (bool): Whether to use POST method instead of GET. Defaults to False.
+            body (dict, optional): Request body for POST requests. Defaults to None (empty dict).
+            url_api (str): Full URL for the API endpoint. Used when path is None or 
+                as base URL when path is provided. Defaults to "".
+            cloud_provider (str): Cloud provider identifier for response processing.
+                Defaults to "".
+            pb (tqdm, optional): Progress bar instance for tracking overall progress.
+                Defaults to None.
+            pb_message (str, optional): Custom message for the progress bar. If None,
+                uses default message. Defaults to None.
+            paging_pb (bool): Whether to show a separate progress bar for pagination.
+                Defaults to False.
+            full_response (bool): Whether to save the complete API response or just
+                the extracted data. Defaults to False.
+        
+        Returns:
+            tuple[bool, str]: A tuple containing:
+                - bool: True if an error occurred, False if successful
+                - str: Success message or error description
+        
+        Raises:
+            NoClusterEventsError: When the API response indicates cluster events don't exist
+            Exception: For other API errors or connection failures
+        
+        Side Effects:
+            - Creates output files in the configured output directory
+            - Updates self.results_count with the number of records processed
+            - Updates progress bars if provided
+            - Writes error logs to the output directory if exceptions occur
+        
+        Note:
+            The method automatically handles:
+            - Multiple pagination mechanisms (tokens, offsets, skip parameters)
+            - Rate limiting and error handling
+            - Data validation and file integrity checks
+            - Progress tracking for long-running operations
+        
+        Example:
+            # Simple GET request
+            error, message = manager.get_and_save(
+                path="api/v2/clusters",
+                name_output="clusters",
+                use_paging=True
+            )
+            
+            # POST request with custom parameters
+            error, message = manager.get_and_save(
+                path="api/v2/sql/history/queries",
+                name_output="query_history",
+                post=True,
+                body={"max_results": 1000},
+                use_paging=True,
+                paging_pb=True
+            )
+        """
         has_more = True
         counter = 0
         next_page_token = ""
@@ -65,6 +139,7 @@ class Manager:
             pb.set_description(f"{pb_message}") if pb_message else pb.set_description(
                 f"Processing {path}"
             )
+        result = False, "Data fetched and saved successfully"
         try:
             new_params = default_params.copy()
             pb_paging = None
@@ -103,10 +178,14 @@ class Manager:
         except Exception as e:
             local_vars = locals().copy()
             Util.write_log(self.output, e, local_vars)
-
+            error_message = f"Error while processing url: {url_api}. {str(e)}"
+            result = True, error_message
+            print(f"Error fetching {name_output.replace('_', ' ')}: {error_message}")
         if pb:
             pb.update(1)
         self.results_count[name_output] = len(full_json)
+
+        return result
 
     def get_response(self, body, new_params, path, post, url):
         query = self.api_utl.get_query(new_params)

@@ -72,64 +72,235 @@ class UtilFile:
         return s
 
     @staticmethod
-    def compress_folder_to_zip(output, output_zip_file, extension="zip"):
+    def compress_folder_to_zip(
+        source_folder_path: str,
+        output_zip_file_no_extension: str,
+        extension: str = "zip",
+        split_size_mb: int = 195,
+    ) -> str | None:
+        """Compresses a specified folder into a zip archive, optionally splitting it.
+
+        This function takes a source folder and compresses its contents into a
+        zip file. The zip file is created using the ZIP_DEFLATED compression method.
+        If the resulting zip file's size exceeds a specified threshold,
+        the function will attempt to split it into multiple smaller parts using
+        `UtilFile.split_zip_file`.
+
+        Args:
+            source_folder_path (str): The absolute or relative path to the folder
+                that needs to be compressed.
+            output_zip_file_no_extension (str): The base name for the output zip
+                file, without the file extension. For example, if "archive" is
+                provided, the output might be "archive.zip".
+            extension (str, optional): The file extension for the output zip file.
+                Defaults to "zip".
+            split_size_mb (int, optional): The maximum size in megabytes for each
+                part if the zip file needs to be split. If the total size of the
+                created zip file exceeds this value, it will be split into
+                multiple files (e.g., archive.z01, archive.z02, ...).
+                Defaults to 195 MB.
+
+        Raises:
+            Exception: If the `source_folder_path` does not exist.
+                Other exceptions encountered during the zipping or splitting
+                process are caught, and their error messages are printed to the
+                standard output; these exceptions are not re-raised by this function.
+        """
         try:
-            if not os.path.exists(output):
-                raise Exception(f"The source folder '{output}' does not exist.")
+            if not os.path.exists(source_folder_path):
+                raise Exception(
+                    f"The source folder '{source_folder_path}' does not exist."
+                )
 
             with zipfile.ZipFile(
-                f"{output_zip_file}.{extension}", "w", zipfile.ZIP_DEFLATED
+                f"{output_zip_file_no_extension}.{extension}", "w", zipfile.ZIP_DEFLATED
             ) as zipf:
-                for root, dirs, files in os.walk(output):
+                for root, dirs, files in os.walk(source_folder_path):
                     for file in files:
                         file_path = os.path.join(root, file)
-                        relative_path = os.path.relpath(file_path, output)
+                        relative_path = os.path.relpath(file_path, source_folder_path)
                         zipf.write(file_path, relative_path)
 
-            zip_file_size_bytes = os.path.getsize(f"{output_zip_file}.{extension}")
+            zip_file_size_bytes = os.path.getsize(
+                f"{output_zip_file_no_extension}.{extension}"
+            )
 
-            if zip_file_size_bytes > 199 * 1024 * 1024:
-                UtilFile.split_zip_file(f"{output_zip_file}.{extension}")
+            if zip_file_size_bytes > split_size_mb * 1024 * 1024:
+                return UtilFile.split_zip_file(
+                    zip_file_path=f"{output_zip_file_no_extension}.{extension}",
+                    part_size_mb=split_size_mb,
+                )
+            return f"{output_zip_file_no_extension}.{extension}"
 
         except Exception as e:
             print(f"Error: {e}")
+            return None
 
     @staticmethod
-    def split_zip_file(file_path: str, part_size_mb: int = 195):
-        if not file_path.lower().endswith(".zip"):
+    def split_zip_file(zip_file_path: str, part_size_mb: int = 195) -> str | None:
+        """Splits a large .zip file into smaller, numbered part files,
+        and then creates a new .zip archive containing these part files.
+
+        The original .zip file is read and split into chunks based on the
+        `part_size_mb` parameter. Each chunk is saved as a separate file in the
+        same directory as the original file, with a suffix like '.001', '.002',
+        etc. (e.g., 'original_filename.zip.001').
+
+        After all parts are created, these part files are then bundled into a
+        new .zip archive. This new archive is named 'we_data_X_parts.zip',
+        where X is the total number of parts created plus one. This new archive
+        is saved in the same directory as the original .zip file.
+
+        The individual part files (e.g., 'original_filename.zip.001') are
+        deleted after being successfully added to the new 'we_data_X_parts.zip'
+        archive. The original input .zip file remains untouched.
+
+        Args:
+            zip_file_path (str): The absolute or relative path to the .zip file
+                that needs to be split.
+            part_size_mb (int, optional): The maximum size for each part file
+                in megabytes (MB). Defaults to 195 MB.
+
+        Raises:
+            ValueError: If the `zip_file_path` does not point to a file with
+                a '.zip' extension.
+
+        Side effects:
+            - Creates temporary part files (e.g., 'filename.zip.001') in the
+              same directory as the input `zip_file_path`. These are deleted
+              once they are archived into the new zip file.
+            - Creates a new zip file named 'we_data_X_parts.zip' (where X is
+              the number of parts + 1) in the same directory as the input
+              `zip_file_path`. This new zip file contains all the generated
+              part files.
+        """
+        if not zip_file_path.lower().endswith(".zip"):
             raise ValueError(
-                f"File '{file_path}' is not a zip file. Splitting is only supported for .zip files."
+                f"File '{zip_file_path}' is not a zip file. Splitting is only supported for .zip files."
             )
 
-        part_size = part_size_mb * 1024 * 1024
-        part_num = 1
+        try:
+            part_size = part_size_mb * 1024 * 1024
+            part_num = 1
 
-        with open(file_path, "rb") as f:
-            while True:
-                chunk = f.read(part_size)
-                if not chunk:
-                    break
-                part_filename = f"{file_path}.{part_num:03d}"
-                with open(part_filename, "wb") as pf:
-                    pf.write(chunk)
-                # print(f"Created: {part_filename}")
-                part_num += 1
+            with open(zip_file_path, "rb") as f:
+                while True:
+                    chunk = f.read(part_size)
+                    if not chunk:
+                        break
+                    part_filename = f"{zip_file_path}.{part_num:03d}"
+                    with open(part_filename, "wb") as pf:
+                        pf.write(chunk)
+                    part_num += 1
 
-        # we_data_8_parts
+            return UtilFile.rezip_zip_parts(zip_file_path, part_num)
+        except Exception as _:
+            return None
 
-        base_path = os.path.dirname(file_path)
-        merged_parts_zip_file_name = f"{base_path}/we_data_{part_num}_parts.zip"
+    @staticmethod
+    def rezip_zip_parts(zip_file_path: str, part_num: int) -> str:
+        """
+        Consolidate multiple split zip parts into a single zip archive.
+        
+        This method searches for and combines split zip file parts (e.g., file.zip.001, file.zip.002)
+        that were created by the split_zip_file method, then creates a new consolidated zip archive
+        containing all the parts. The original part files are deleted after consolidation.
+        
+        Args:
+            zip_file_path (str): Path to the original zip file (base name for the parts).
+                Used to identify and match the corresponding split parts with pattern
+                {basename}.001, {basename}.002, etc.
+            part_num (int): Number of parts to expect/consolidate. Used in the output
+                filename to indicate how many parts were merged.
+        
+        Returns:
+            str: Path to the newly created consolidated zip file with format:
+                "{base_path}/we_{filename_without_extension}_data_{part_num}_parts.zip"
+        
+        Side Effects:
+            - Creates a new consolidated zip file in the same directory as the original
+            - Deletes all original split part files after successful consolidation
+            - Uses ZIP_DEFLATED compression for the consolidated archive
+        
+        File Processing:
+            - Searches for parts matching pattern: {basename}.\\d{3} (e.g., file.zip.001)
+            - Walks through the base directory to find all matching parts
+            - Adds each part file to the new zip with its relative path preserved
+            - Removes each part file immediately after adding to the new zip
+        
+        Error Handling:
+            - If part files don't exist or can't be accessed, the method may fail
+            - If the output directory is not writable, file creation will fail
+            - No explicit error handling - exceptions will propagate to caller
+        
+        Use Cases:
+            - Reassembling large data exports that were split for transfer
+            - Consolidating workspace estimator output files after processing
+            - Preparing split archives for final distribution or storage
+            - Cleaning up temporary split files while preserving data
+        
+        File Naming Convention:
+            Input parts: original_file.zip.001, original_file.zip.002, ...
+            Output: we_original_file_data_{part_num}_parts.zip
+        
+        Example:
+            # Consolidate 3 parts of a split zip file
+            original_zip = "/path/to/workspace_data.zip"
+            # Assumes parts exist: workspace_data.zip.001, workspace_data.zip.002, workspace_data.zip.003
+            
+            consolidated_path = UtilFile.rezip_zip_parts(original_zip, 3)
+            print(f"Consolidated zip created: {consolidated_path}")
+            # Output: "/path/to/we_workspace_data_data_3_parts.zip"
+            
+            # Original part files (.001, .002, .003) are automatically deleted
+        
+        Note:
+            This method is typically used after split_zip_file has created multiple parts
+            and you want to recombine them into a single archive. The part numbering
+            parameter should match the actual number of parts created during splitting.
+        """
+        base_path, zip_file_basename, filename_without_extension, _ = (
+            UtilFile.get_path_separated(zip_file_path)
+        )
+
+        merged_parts_zip_file_name = (
+            f"{base_path}/we_{filename_without_extension}_data_{part_num}_parts.zip"
+        )
 
         with zipfile.ZipFile(
             merged_parts_zip_file_name, "w", zipfile.ZIP_DEFLATED
         ) as zipf:
-            for root, dirs, files in os.walk(base_path):
+            for root, _, files in os.walk(base_path):
                 for file in files:
-                    if re.match(r".*\.zip\.\d{3}$", file):
+                    zip_file_basename = os.path.basename(zip_file_path)
+                    part_file_pattern = f"^{re.escape(zip_file_basename)}\\.\\d{{3}}$"
+                    if re.match(part_file_pattern, file):
                         part_file_path = os.path.join(root, file)
                         relative_path = os.path.relpath(part_file_path, base_path)
                         zipf.write(part_file_path, relative_path)
                         os.remove(part_file_path)
+
+        return merged_parts_zip_file_name
+
+    @staticmethod
+    def get_path_separated(file_path: str) -> tuple[str, str, str, str]:
+        """Separates a file path into its directory, basename, filename without extension, and extension.
+
+        Args:
+            file_path (str): The full path to the file.
+
+        Returns:
+            tuple[str, str, str, str]: A tuple containing:
+                - base_path (str): The directory path of the file.
+                - zip_file_basename (str): The name of the file including its extension (basename).
+                - filename_without_extension (str): The name of the file without its extension.
+                - file_extension (str): The file extension (e.g., '.txt', '.zip').
+        """
+        base_path = os.path.dirname(file_path)
+        zip_file_basename = os.path.basename(file_path)
+        filename_without_extension, file_extension = os.path.splitext(zip_file_basename)
+
+        return base_path, zip_file_basename, filename_without_extension, file_extension
 
     @staticmethod
     def clean_output(output):

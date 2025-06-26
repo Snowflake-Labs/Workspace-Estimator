@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "workspace-estimator" # This is the name used on PyPI and for pip install
-version = "0.3.0"
+version = "0.7.0"
 authors = [
   { name="Snowflake", email="erick.cuberojimenez@snowflake.com" },
 ]
@@ -49,3 +49,6 @@ package-dir = {"" = "src"} # Tells setuptools that packages are under src/
 where = ["src"]  # look for packages in src
 # include = ["workspace_estimator*"] # include all packages starting with workspace_estimator
 exclude = ["workspace_estimator.tests*"] # optional: exclude test packages
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
