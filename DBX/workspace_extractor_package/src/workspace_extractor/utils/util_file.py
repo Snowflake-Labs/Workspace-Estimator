@@ -46,8 +46,6 @@ class UtilFile:
                     start = end + 1 if end != 0 else 0
                     end = end + size_part if i != parts else count - 1
                     json_data_part = json_data_check[start:end]
-                    # the following line is to activate the cleanup of the json files.
-                    # json_data_part = UtilFile.filter_data(json_data_part, [])
                     UtilFile.write_file_request_(
                         output, f"{name_output}_{i + 1:02d}", json_data_part
                     )
@@ -318,10 +316,8 @@ class UtilFile:
 
     @staticmethod
     def get_file_name(workspace):
-        workspace = workspace.replace(" ", "_")
-        workspace = workspace.replace(" ", "")
-        workspace = workspace.replace(" ", "_")
-        workspace = re.sub(r"[^A-Za-z0-9 ]+", "", workspace)
+        workspace = re.sub(r"\s+", "_", workspace) 
+        workspace = re.sub(r"[^A-Za-z0-9_]+", "", workspace) 
         workspace = "Default_wkp" if workspace == "" else workspace
         now = datetime.now()
         date_part = now.strftime("%m%d")
@@ -329,8 +325,8 @@ class UtilFile:
         return name
 
     @staticmethod
-    def has_correct_size(size_bites_unit_value, size_max_unit_value, array_units):
-        size_unit = size_bites_unit_value.split(" ")[1]
+    def has_correct_size(size_bytes_unit_value, size_max_unit_value, array_units):
+        size_unit = size_bytes_unit_value.split(" ")[1]
         size_index = array_units.index(size_unit)
         size_max_unit = size_max_unit_value.split(" ")[1]
         size_max_index = array_units.index(size_max_unit)
@@ -339,7 +335,7 @@ class UtilFile:
         elif size_index > size_max_index:
             return False
         else:
-            size_value = int(size_bites_unit_value.split(" ")[0])
+            size_value = int(size_bytes_unit_value.split(" ")[0])
             size_max_value = int(size_max_unit_value.split(" ")[0])
             if size_value > size_max_value:
                 return False

@@ -8,7 +8,6 @@ from unittest.mock import mock_open, patch
 import zipfile
 
 import pytest
-import pytest
 
 from workspace_extractor.utils.util_file import UtilFile
 

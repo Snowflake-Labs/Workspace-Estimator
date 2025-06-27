@@ -42,8 +42,8 @@ python -m build
 ```
 
 After building, you should see the generated files in the `dist/` directory:
-- `your-package-name-version.tar.gz` (source distribution)
-- `your-package-name-version-py3-none-any.whl` (wheel distribution)
+- `workspace_extractor-x.y.z.tar.gz` (source distribution)
+- `workspace_extractor-x.y.z-py3-none-any.whl` (wheel distribution)
 
 ## Step 2: Test Your Build
 
