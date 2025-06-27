@@ -30,7 +30,6 @@ class Mapping:
                 "first", ascending=False
             )
             rank_first_df = result_df[result_df["rank"] == 1]
-            # rank_first_df = rank_first_df.dropna(subset=["cluster_id"])
             rank_first_df = rank_first_df[rank_first_df["cluster_id"].notna()]
             cluster_ids = rank_first_df["cluster_id"].values
             return set(cluster_ids)
@@ -58,7 +57,6 @@ class Mapping:
                 "first", ascending=False
             )
             rank_first_df = result_df[result_df["rank"] == 1]
-            # rank_first_df = rank_first_df.dropna(subset=["cluster_id"])
             rank_first_df = rank_first_df[rank_first_df["cluster_id"].notna()]
             cluster_ids = rank_first_df["cluster_id"].values
             new_clusters.extend(set(cluster_ids))
@@ -80,7 +78,6 @@ class Mapping:
                 "first", ascending=False
             )
             rank_first_df = result_df[result_df["rank"] == 1]
-            # rank_first_df = rank_first_df.dropna(subset=["run_id"])
             rank_first_df = rank_first_df[rank_first_df["run_id"].notna()]
             runs_ids = rank_first_df["run_id"].values
             return set(runs_ids)
