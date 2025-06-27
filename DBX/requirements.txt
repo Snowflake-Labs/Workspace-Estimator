@@ -34,5 +34,3 @@ twine==6.1.0
 tzdata==2025.2
 urllib3==2.4.0
 wheel==0.45.1
-# Editable install with no version control (workspace-estimator==0.7.0)
--e /Users/ecuberojimenez/repositories/Workspace-Estimator/DBX/workspace_extractor_package
