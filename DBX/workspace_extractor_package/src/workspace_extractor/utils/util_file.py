@@ -6,7 +6,7 @@ import shutil
 import zipfile
 from datetime import datetime
 
-from workspace_estimator.exceptions.no_cluster_events_error import NoClusterEventsError
+from workspace_extractor.exceptions.no_cluster_events_error import NoClusterEventsError
 
 
 class UtilFile:

@@ -4,7 +4,7 @@ import os
 
 import pandas as pd
 
-from workspace_estimator.utils.util import Util
+from workspace_extractor.utils.util import Util
 
 
 class Mapping:

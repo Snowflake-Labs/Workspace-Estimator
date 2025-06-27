@@ -3,8 +3,8 @@ from datetime import datetime, timedelta
 
 from tqdm.notebook import tqdm_notebook
 
-from workspace_estimator.manager import Manager
-from workspace_estimator.mapping import Mapping
+from workspace_extractor.manager import Manager
+from workspace_extractor.mapping import Mapping
 
 
 class Sizing(Manager):

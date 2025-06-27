@@ -1,6 +1,6 @@
 from urllib.parse import urlencode
 
-from workspace_estimator.utils.util_file import UtilFile
+from workspace_extractor.utils.util_file import UtilFile
 
 
 class Util(UtilFile):

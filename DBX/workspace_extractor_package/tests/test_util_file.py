@@ -10,7 +10,7 @@ import zipfile
 import pytest
 import pytest
 
-from workspace_estimator.utils.util_file import UtilFile
+from workspace_extractor.utils.util_file import UtilFile
 
 class TestGetFileName:
     @pytest.mark.parametrize(
@@ -26,7 +26,7 @@ class TestGetFileName:
             ("ValidName123", "ValidName123"),
         ],
     )
-    @patch("workspace_estimator.utils.util_file.datetime")
+    @patch("workspace_extractor.utils.util_file.datetime")
     def test_get_file_name(self, mock_datetime, workspace_input: str, expected_prefix: str) -> None:
         mock_now = datetime(2023, 10, 26)
         mock_datetime.now.return_value = mock_now
@@ -37,7 +37,7 @@ class TestGetFileName:
         assert result == f"{expected_prefix}_{expected_date_part}"
         mock_datetime.now.assert_called_once()
 
-    @patch("workspace_estimator.utils.util_file.datetime")
+    @patch("workspace_extractor.utils.util_file.datetime")
     def test_get_file_name_empty_after_cleaning(self, mock_datetime) -> None:
         mock_now = datetime(2023, 1, 5)
         mock_datetime.now.return_value = mock_now
@@ -49,7 +49,7 @@ class TestGetFileName:
         assert result == f"Default_wkp_{expected_date_part}"
         mock_datetime.now.assert_called_once()
 
-    @patch("workspace_estimator.utils.util_file.datetime")
+    @patch("workspace_extractor.utils.util_file.datetime")
     def test_get_file_name_with_internal_spaces_and_special_chars(self, mock_datetime) -> None:
         mock_now = datetime(2024, 12, 31)
         mock_datetime.now.return_value = mock_now
@@ -247,7 +247,7 @@ class TestCompressFolderToZip(TestZipFileOperations):
         
         assert result is None
 
-    @patch('workspace_estimator.utils.util_file.UtilFile.split_zip_file')
+    @patch('workspace_extractor.utils.util_file.UtilFile.split_zip_file')
     def test_compress_folder_to_zip_triggers_split(self, mock_split, sample_large_folder: str, temp_dir: str) -> None:
         """Test that large zip files trigger splitting."""
         output_path = os.path.join(temp_dir, "large_archive")
@@ -261,7 +261,7 @@ class TestCompressFolderToZip(TestZipFileOperations):
         assert result == "split_result.zip"
 
     @patch('builtins.print')
-    @patch('workspace_estimator.utils.util_file.zipfile.ZipFile')
+    @patch('workspace_extractor.utils.util_file.zipfile.ZipFile')
     def test_compress_folder_to_zip_handles_exception(self, mock_zipfile, mock_print, sample_folder: str, temp_dir: str) -> None:
         """Test error handling in compress_folder_to_zip."""
         mock_zipfile.side_effect = Exception("Compression error")
@@ -309,7 +309,7 @@ class TestSplitZipFile(TestZipFileOperations):
         result = UtilFile.split_zip_file(zip_file)
         assert result is not None
 
-    @patch('workspace_estimator.utils.util_file.UtilFile.rezip_zip_parts')
+    @patch('workspace_extractor.utils.util_file.UtilFile.rezip_zip_parts')
     @patch('builtins.open', side_effect=IOError("Cannot read file"))
     def test_split_zip_file_handles_exception(self, mock_open, mock_rezip, sample_zip_file: str) -> None:
         """Test error handling in split_zip_file."""

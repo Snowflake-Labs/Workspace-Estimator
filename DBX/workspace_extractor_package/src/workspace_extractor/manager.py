@@ -3,8 +3,8 @@ import os
 import requests
 from tqdm.notebook import tqdm_notebook
 
-from workspace_estimator.exceptions.no_cluster_events_error import NoClusterEventsError
-from workspace_estimator.utils.util import Util
+from workspace_extractor.exceptions.no_cluster_events_error import NoClusterEventsError
+from workspace_extractor.utils.util import Util
 
 
 class Manager:

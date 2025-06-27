@@ -47,8 +47,8 @@ package-dir = {"" = "src"} # Tells setuptools that packages are under src/
 # If you want to automatically find packages under src/:
 [tool.setuptools.packages.find]
 where = ["src"]  # look for packages in src
-# include = ["workspace_estimator*"] # include all packages starting with workspace_estimator
-exclude = ["workspace_estimator.tests*"] # optional: exclude test packages
+# include = ["workspace_extractor*"] # include all packages starting with workspace_extractor
+exclude = ["workspace_extractor.tests*"] # optional: exclude test packages
 
 [tool.pytest.ini_options]
 pythonpath = ["src", "."]
