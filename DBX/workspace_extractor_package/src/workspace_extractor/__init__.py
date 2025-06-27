@@ -3,4 +3,7 @@ from .sizing import Sizing
 
 __all__ = ["Util", "Sizing"]
 
-__version__ = "0.3.0"
+try:
+    from __version__ import __version__
+except ImportError:
+    __version__ = "0.0.0"

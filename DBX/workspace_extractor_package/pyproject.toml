@@ -6,7 +6,7 @@ requires = ["hatchling"]
 authors = [
   {name = "Snowflake, Inc.", email = "snowflake-python-libraries-dl@snowflake.com"},
 ]
-description = "Snowflake Snowpark Checkpoints"
+description = "Snowflake Wokspace Extractor is a Python package that provides a simple way to extract and analyze data from Snowflake workspaces. It allows users to retrieve metadata, query history, and other relevant information from their Snowflake workspaces, enabling better understanding and management of their data environment."
 dynamic = ['version']
 homepage = "https://www.snowflake.com/"
 license = {text = "Apache License, Version 2.0"}
@@ -46,13 +46,13 @@ keywords = [
   'data-processing',
   'data-management',
   "workspace extractor",
-  "we"
+  "we",
 ]
 
 dependencies = [
   "tqdm==4.67.1",
   "requests==2.32.3",
-  "pandas==2.2.3"
+  "pandas==2.2.3",
 ]
 
 [project.optional-dependencies]
@@ -68,10 +68,9 @@ development = [
 ]
 
 [project.urls]
-"Documentation" ="https://github.com/Snowflake-Labs/Workspace-Estimator/blob/main/README.md"
+"Documentation" = "https://github.com/Snowflake-Labs/Workspace-Estimator/blob/main/README.md"
 "Issues" = "https://github.com/Snowflake-Labs/Workspace-Estimator/issues"
 "Source" = "https://github.com/Snowflake-Labs/Workspace-Estimator"
-
 
 [tool.hatch.build]
 sources = [
@@ -98,3 +97,8 @@ source = "regex"
 dir = "src"
 name = "workspace-extractor"
 type = "package"
+
+[tool.hatch.envs.linter.scripts]
+check = [
+  "echo 'Running linting checks...' && ruff check --config=../../ruff.toml --statistics --verbose . || (echo '❌ LINTING FAILED: Please fix the above linting issues before proceeding. Use \"ruff check --config=../ruff.toml --fix .\" to auto-fix some issues, or fix them manually.' && exit 1)",
+]

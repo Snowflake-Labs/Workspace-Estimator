@@ -1,0 +1,37 @@
+name: Static Analysis and linting [workspace_extractor]
+
+on: workflow_call
+
+env:
+  PYTHON_VERSION: "3.10"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  Lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Setup Python environment
+        run: |
+          python -m pip install --upgrade pip -q
+          pip install hatch ruff -q && pip list
+          hatch --version
+
+      - name: Run lint checks
+        run: |
+          echo "Current directory: $(pwd)" && ls -la
+          hatch run linter:check
+        shell: bash
+        working-directory: "${{ github.workspace }}/DBX/workspace_extractor_package"

@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import zipfile
+
 from datetime import datetime
 
 from workspace_extractor.exceptions.no_cluster_events_error import NoClusterEventsError
@@ -11,14 +12,10 @@ from workspace_extractor.exceptions.no_cluster_events_error import NoClusterEven
 
 class UtilFile:
     email_pattern = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}")
-    url_parameters_pattern = re.compile(
-        "^(?:https?:\/\/)?(?:[^@\/\n]+@)?(?:www\.)?([^:?\n]+)"
-    )
+    url_parameters_pattern = re.compile("^(?:https?:\\/\\/)?(?:[^@\\/\n]+@)?(?:www\\.)?([^:?\n]+)")
     url_pattern = re.compile(r"https?://\S+|www\.\S+")
     jwt_pattern = re.compile(r"[A-Za-z0-9_-]{4,}(?:\.[A-Za-z0-9_-]{4,}){2}")
-    dbx_pattern = re.compile(
-        r"https?://adb-\d{4,16}\.\d{0,2}|https?://dbc-.{4,12}-.{2,4}"
-    )
+    dbx_pattern = re.compile(r"https?://adb-\d{4,16}\.\d{0,2}|https?://dbc-.{4,12}-.{2,4}")
 
     @staticmethod
     def check_file_request_(output, name_output, json_data_check):
@@ -29,9 +26,7 @@ class UtilFile:
             size_max_unit_value = "10 MB"
             array_units = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
             size_bites_unit_value = UtilFile.convert_size_to_mb(size)
-            size_correct = UtilFile.has_correct_size(
-                size_bites_unit_value, size_max_unit_value, array_units
-            )
+            size_correct = UtilFile.has_correct_size(size_bites_unit_value, size_max_unit_value, array_units)
             if size_correct:
                 return True
             else:
@@ -46,9 +41,7 @@ class UtilFile:
                     start = end + 1 if end != 0 else 0
                     end = end + size_part if i != parts else count - 1
                     json_data_part = json_data_check[start:end]
-                    UtilFile.write_file_request_(
-                        output, f"{name_output}_{i + 1:02d}", json_data_part
-                    )
+                    UtilFile.write_file_request_(output, f"{name_output}_{i + 1:02d}", json_data_part)
                 file_path = os.path.join(output, f"{name_output}.json")
                 os.remove(file_path)
                 return True
@@ -58,7 +51,7 @@ class UtilFile:
     @staticmethod
     def convert_size_to_mb(size_bytes):
         s = UtilFile.convert_size_to_mb_number(size_bytes)
-        return "%s %s" % (s, "MB")
+        return "{} {}".format(s, "MB")
 
     @staticmethod
     def convert_size_to_mb_number(size_bytes):
@@ -103,25 +96,20 @@ class UtilFile:
                 Other exceptions encountered during the zipping or splitting
                 process are caught, and their error messages are printed to the
                 standard output; these exceptions are not re-raised by this function.
+
         """
         try:
             if not os.path.exists(source_folder_path):
-                raise Exception(
-                    f"The source folder '{source_folder_path}' does not exist."
-                )
+                raise Exception(f"The source folder '{source_folder_path}' does not exist.")
 
-            with zipfile.ZipFile(
-                f"{output_zip_file_no_extension}.{extension}", "w", zipfile.ZIP_DEFLATED
-            ) as zipf:
-                for root, dirs, files in os.walk(source_folder_path):
+            with zipfile.ZipFile(f"{output_zip_file_no_extension}.{extension}", "w", zipfile.ZIP_DEFLATED) as zipf:
+                for root, _dirs, files in os.walk(source_folder_path):
                     for file in files:
                         file_path = os.path.join(root, file)
                         relative_path = os.path.relpath(file_path, source_folder_path)
                         zipf.write(file_path, relative_path)
 
-            zip_file_size_bytes = os.path.getsize(
-                f"{output_zip_file_no_extension}.{extension}"
-            )
+            zip_file_size_bytes = os.path.getsize(f"{output_zip_file_no_extension}.{extension}")
 
             if zip_file_size_bytes > split_size_mb * 1024 * 1024:
                 return UtilFile.split_zip_file(
@@ -136,8 +124,7 @@ class UtilFile:
 
     @staticmethod
     def split_zip_file(zip_file_path: str, part_size_mb: int = 195) -> str | None:
-        """Splits a large .zip file into smaller, numbered part files,
-        and then creates a new .zip archive containing these part files.
+        """Split a large .zip file into smaller parts and create a new archive.
 
         The original .zip file is read and split into chunks based on the
         `part_size_mb` parameter. Each chunk is saved as a separate file in the
@@ -171,11 +158,10 @@ class UtilFile:
               the number of parts + 1) in the same directory as the input
               `zip_file_path`. This new zip file contains all the generated
               part files.
+
         """
         if not zip_file_path.lower().endswith(".zip"):
-            raise ValueError(
-                f"File '{zip_file_path}' is not a zip file. Splitting is only supported for .zip files."
-            )
+            raise ValueError(f"File '{zip_file_path}' is not a zip file. Splitting is only supported for .zip files.")
 
         try:
             part_size = part_size_mb * 1024 * 1024
@@ -197,77 +183,71 @@ class UtilFile:
 
     @staticmethod
     def rezip_zip_parts(zip_file_path: str, part_num: int) -> str:
-        """
-        Consolidate multiple split zip parts into a single zip archive.
-        
+        r"""Consolidate multiple split zip parts into a single zip archive.
+
         This method searches for and combines split zip file parts (e.g., file.zip.001, file.zip.002)
         that were created by the split_zip_file method, then creates a new consolidated zip archive
         containing all the parts. The original part files are deleted after consolidation.
-        
+
         Args:
             zip_file_path (str): Path to the original zip file (base name for the parts).
                 Used to identify and match the corresponding split parts with pattern
                 {basename}.001, {basename}.002, etc.
             part_num (int): Number of parts to expect/consolidate. Used in the output
                 filename to indicate how many parts were merged.
-        
+
         Returns:
             str: Path to the newly created consolidated zip file with format:
                 "{base_path}/we_{filename_without_extension}_data_{part_num}_parts.zip"
-        
+
         Side Effects:
             - Creates a new consolidated zip file in the same directory as the original
             - Deletes all original split part files after successful consolidation
             - Uses ZIP_DEFLATED compression for the consolidated archive
-        
+
         File Processing:
             - Searches for parts matching pattern: {basename}.\\d{3} (e.g., file.zip.001)
             - Walks through the base directory to find all matching parts
             - Adds each part file to the new zip with its relative path preserved
             - Removes each part file immediately after adding to the new zip
-        
+
         Error Handling:
             - If part files don't exist or can't be accessed, the method may fail
             - If the output directory is not writable, file creation will fail
             - No explicit error handling - exceptions will propagate to caller
-        
+
         Use Cases:
             - Reassembling large data exports that were split for transfer
             - Consolidating workspace estimator output files after processing
             - Preparing split archives for final distribution or storage
             - Cleaning up temporary split files while preserving data
-        
+
         File Naming Convention:
             Input parts: original_file.zip.001, original_file.zip.002, ...
             Output: we_original_file_data_{part_num}_parts.zip
-        
+
         Example:
             # Consolidate 3 parts of a split zip file
             original_zip = "/path/to/workspace_data.zip"
             # Assumes parts exist: workspace_data.zip.001, workspace_data.zip.002, workspace_data.zip.003
-            
+
             consolidated_path = UtilFile.rezip_zip_parts(original_zip, 3)
             print(f"Consolidated zip created: {consolidated_path}")
             # Output: "/path/to/we_workspace_data_data_3_parts.zip"
-            
+
             # Original part files (.001, .002, .003) are automatically deleted
-        
+
         Note:
             This method is typically used after split_zip_file has created multiple parts
             and you want to recombine them into a single archive. The part numbering
             parameter should match the actual number of parts created during splitting.
+
         """
-        base_path, zip_file_basename, filename_without_extension, _ = (
-            UtilFile.get_path_separated(zip_file_path)
-        )
+        base_path, zip_file_basename, filename_without_extension, _ = UtilFile.get_path_separated(zip_file_path)
 
-        merged_parts_zip_file_name = (
-            f"{base_path}/we_{filename_without_extension}_data_{part_num}_parts.zip"
-        )
+        merged_parts_zip_file_name = f"{base_path}/we_{filename_without_extension}_data_{part_num}_parts.zip"
 
-        with zipfile.ZipFile(
-            merged_parts_zip_file_name, "w", zipfile.ZIP_DEFLATED
-        ) as zipf:
+        with zipfile.ZipFile(merged_parts_zip_file_name, "w", zipfile.ZIP_DEFLATED) as zipf:
             for root, _, files in os.walk(base_path):
                 for file in files:
                     zip_file_basename = os.path.basename(zip_file_path)
@@ -293,6 +273,7 @@ class UtilFile:
                 - zip_file_basename (str): The name of the file including its extension (basename).
                 - filename_without_extension (str): The name of the file without its extension.
                 - file_extension (str): The file extension (e.g., '.txt', '.zip').
+
         """
         base_path = os.path.dirname(file_path)
         zip_file_basename = os.path.basename(file_path)
@@ -316,8 +297,8 @@ class UtilFile:
 
     @staticmethod
     def get_file_name(workspace):
-        workspace = re.sub(r"\s+", "_", workspace) 
-        workspace = re.sub(r"[^A-Za-z0-9_]+", "", workspace) 
+        workspace = re.sub(r"\s+", "_", workspace)
+        workspace = re.sub(r"[^A-Za-z0-9_]+", "", workspace)
         workspace = "Default_wkp" if workspace == "" else workspace
         now = datetime.now()
         date_part = now.strftime("%m%d")
@@ -344,7 +325,7 @@ class UtilFile:
 
     @staticmethod
     def read_config(config_path):
-        with open(config_path, "r") as file:
+        with open(config_path) as file:
             config_values = json.load(file)
         if "url" not in config_values:
             raise ValueError("Missing 'url' in configuration file.")
@@ -363,13 +344,7 @@ class UtilFile:
                 items = local_vars.items()
                 log_file.write(variables_message)
                 not_include = ["self", "file", "e", "log_file"]
-                variables_info = "   ".join(
-                    [
-                        f"{key}: {value}\n"
-                        for key, value in items
-                        if key not in not_include
-                    ]
-                )
+                variables_info = "   ".join([f"{key}: {value}\n" for key, value in items if key not in not_include])
                 log_file.write(f"   {variables_info}")
 
     @staticmethod

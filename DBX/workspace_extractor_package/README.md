@@ -4,7 +4,7 @@ Workspace Estimator allows you to analyze information about your workspace witho
 
 ## Disclaimer
 
-This application is **not** part of the Snowflake Service and is governed by the terms in LICENSE.txt, unless expressly agreed to in writing. You use this application at your own risk, and Snowflake has no obligation to support your use of this application.
+This application is **not** part of the Snowflake Service and is governed by the terms in LICENSE, unless expressly agreed to in writing. You use this application at your own risk, and Snowflake has no obligation to support your use of this application.
 
 ## License
 
@@ -20,25 +20,25 @@ Please follow instructions in the [step by step guide](../Step%20By%20Step%20Gui
 
 # Building and Publishing to PyPI
 
-This guide explains how to build your Python package using setuptools and publish it to PyPI using twine.
+This guide explains how to build your Python package using Hatch and publish it to PyPI using twine.
 
 ## Prerequisites
 
 Ensure you have the required tools installed:
 
 ```bash
-pip install build twine setuptools wheel
+pip install hatch twine
 ```
 
 ## Step 1: Build the Package
 
-### Using the build tool (recommended)
+### Using Hatch (recommended)
 ```bash
 # Clean any previous builds
 rm -rf dist/ build/ *.egg-info/
 
-# Build the package
-python -m build
+# Build the package using Hatch
+hatch build
 ```
 
 After building, you should see the generated files in the `dist/` directory:
@@ -92,8 +92,8 @@ After the ``twine upload dist/*`` command is executed it will ask for a password
 # 1. Clean previous builds
 rm -rf dist/ build/ *.egg-info/
 
-# 2. Build the package
-python -m build
+# 2. Build the package using Hatch
+hatch build
 
 # 3. Check the build
 twine check dist/*
@@ -114,7 +114,7 @@ twine upload dist/*
 
 - **"Package already exists"**: You cannot overwrite existing versions. Increment your version number in `pyproject.toml` or `setup.py`.
 - **Authentication failed**: Check your API token or credentials.
-- **File not found**: Ensure you've built the package first with `python -m build`.
+- **File not found**: Ensure you've built the package first with `hatch build`.
 
 ### Checking Your Build
 
@@ -128,10 +128,12 @@ unzip -l dist/your-package-name-version-py3-none-any.whl
 
 ### Version Management
 
-Always increment your version number for new releases:
+Always increment your version number for new releases in `__version__.py`:
 - Patch version: `1.0.0` → `1.0.1` (bug fixes)
 - Minor version: `1.0.0` → `1.1.0` (new features)
 - Major version: `1.0.0` → `2.0.0` (breaking changes)
+
+Note: With Hatch, the version is managed in the `__version__.py` file as configured in `pyproject.toml`.
 
 ## Security Best Practices
 

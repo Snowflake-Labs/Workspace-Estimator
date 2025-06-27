@@ -1,0 +1,23 @@
+exclude: "^(.*egg.info.*|.*/parameters.py|docs/).*$"
+default_language_version:
+  python: python3.10
+
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.10
+    hooks:
+      - id: ruff
+        args: [--config=ruff.toml, --statistics]
+      - id: ruff-format
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '.*\.md$'
+      - id: end-of-file-fixer
+      - id: check-yaml
+        exclude: '.github/workflows/.*'
+      - id: check-toml
+      - id: check-json
+      - id: detect-private-key
