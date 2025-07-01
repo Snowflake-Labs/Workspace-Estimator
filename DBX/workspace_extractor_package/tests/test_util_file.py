@@ -2,7 +2,7 @@ from datetime import datetime
 import os
 import shutil
 import tempfile
-from typing import Generator, List
+from typing import Generator
 from unittest.mock import mock_open, patch
 import zipfile
 
@@ -320,7 +320,7 @@ class TestSplitZipFile(TestZipFileOperations):
 class TestRezipZipParts(TestZipFileOperations):
     """Tests for rezip_zip_parts method."""
 
-    def create_zip_parts(self, base_zip_path: str, num_parts: int) -> List[str]:
+    def create_zip_parts(self, base_zip_path: str, num_parts: int) -> list[str]:
         """Helper method to create zip parts for testing."""
         base_dir = os.path.dirname(base_zip_path)
         base_name = os.path.basename(base_zip_path)
@@ -433,8 +433,8 @@ class TestIntegrationZipOperations(TestZipFileOperations):
             content = f.read()
             assert content == "Nested file content for testing."
 
-    @pytest.mark.parametrize("split_size_mb", [0.001, 0.01, 0.1])
-    def test_different_split_sizes(self, sample_folder: str, temp_dir: str, split_size_mb: float) -> None:
+    @pytest.mark.parametrize("split_size_mb", [1, 2, 5])
+    def test_different_split_sizes(self, sample_folder: str, temp_dir: str, split_size_mb: int) -> None:
         """Test compression with different split sizes."""
         output_path = os.path.join(temp_dir, f"split_test_{split_size_mb}")
 

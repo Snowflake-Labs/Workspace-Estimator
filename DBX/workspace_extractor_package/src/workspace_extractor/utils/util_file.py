@@ -298,7 +298,7 @@ class UtilFile:
     @staticmethod
     def get_file_name(workspace):
         workspace = re.sub(r"\s+", "_", workspace)
-        workspace = re.sub(r"[^A-Za-z0-9_]+", "", workspace)
+        workspace = re.sub(r"[^A-Za-z0-9]+", "", workspace)
         workspace = "Default_wkp" if workspace == "" else workspace
         now = datetime.now()
         date_part = now.strftime("%m%d")
