@@ -1,0 +1,104 @@
+name: Build Package [workspace_extractor]
+
+on:
+  workflow_call:
+    inputs:
+      artifact-name:
+        required: true
+        type: string
+
+env:
+  PYTHON_VERSION: "3.10"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  Artifact:
+    name: Build Artifact Wheels with version
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACT_NAME: ${{ inputs.artifact-name }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch tags
+        run: git fetch --all --tags --prune
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          set -e
+          VERSION=$(git tag --list | grep -E '^[vV]?[0-9]+\.[0-9]+\.[0-9]+(rc[0-9]+)?$' | sort -V | tail -n 1)
+          VERSION=${VERSION#v}
+          VERSION=${VERSION#V}
+
+          if [[ -z "$VERSION" ]]; then
+            echo "Error: No valid version tag found"
+            exit 1
+          fi
+
+          echo "version=$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+        shell: bash
+
+      - name: Set Version
+        run: |
+          set -e
+          echo "Current directory: $PWD" && ls -l
+          echo "Updating pip file ${FILE_NAME} with version: ${NEW_VERSION}"
+          find $(pwd) -name "${FILE_NAME}" -exec sh -c 'sed -i "s/__version__ = \".*\"/__version__ = \"${NEW_VERSION}\"/" "$1"' _ {} \;
+        env:
+          NEW_VERSION: ${{ steps.get_version.outputs.version }}
+          FILE_NAME: __version__.py
+        working-directory: "${{ github.workspace }}/DBX/workspace_extractor_package"
+
+      - name: Get Version Info
+        run: |
+          set -e
+          echo "Current directory: $PWD" && ls -l
+          find $(pwd) -name "${FILE_NAME}" -exec cat {} \;
+          echo "Displaying version from __version__.py files:"
+          VERSION=$(find $(pwd) -name "${FILE_NAME}" -exec sh -c 'grep "__version__" $1 | cut -d "\"" -f 2' _ {} \;)
+          if [ "$VERSION" = "0.0.0" ]; then
+            echo "⚠️ Version is still 0.0.0"
+          fi
+        env:
+          FILE_NAME: __version__.py
+        working-directory: "${{ github.workspace }}/DBX/workspace_extractor_package"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "${{ env.PYTHON_VERSION }}"
+
+      - name: Install required tools
+        run: |
+          python -m pip install --upgrade pip -q
+          pip install hatch -q
+          pip install ".[development]"
+          pip list
+        working-directory: "${{ github.workspace }}/DBX/workspace_extractor_package"
+
+      - name: Generate wheel and dist
+        run: |
+          echo "Hatch build started"
+          hatch build
+          echo "Current directory: $PWD" && ls -la dist
+          if [ -z "$(ls -A dist)" ]; then
+            echo "Error: dist directory is empty"
+            exit 1
+          fi
+        working-directory: "${{ github.workspace }}/DBX/workspace_extractor_package"
+
+      - name: Upload Package Artifact
+        if: ${{ github.event_name == 'pull_request' || github.ref == 'refs/heads/main' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}-v${{ steps.get_version.outputs.version }}
+          path: ${{ github.workspace }}/DBX/workspace_extractor_package/dist/*

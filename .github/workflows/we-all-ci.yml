@@ -1,0 +1,37 @@
+name: Run All workflows [workspace_extractor]
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**"
+      - "!tests/**"
+      - "!demos/**"
+      - "!docs/**"
+  pull_request:
+    branches:
+      - "**"
+    paths:
+      - "**"
+      - "!tests/**"
+      - "!demos/**"
+      - "!docs/**"
+  workflow_call:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  lint:
+    name: Static analysis and linting workspace_extractor
+    uses: ./.github/workflows/we-linter.yml
+
+  build:
+    needs: lint
+    name: Build wheels workspace_extractor
+    uses: ./.github/workflows/we-package.yml
+    secrets: inherit
+    with:
+      artifact-name: workspace_extractor
