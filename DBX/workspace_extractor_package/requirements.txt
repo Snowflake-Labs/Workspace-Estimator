@@ -20,7 +20,7 @@ pyproject_hooks==1.2.0
 python-dateutil==2.9.0.post0
 pytz==2025.2
 readme_renderer==44.0
-requests==2.32.3
+requests==2.32.4
 requests-toolbelt==1.0.0
 rfc3986==2.0.0
 rich==14.0.0
@@ -29,5 +29,5 @@ six==1.17.0
 tqdm==4.67.1
 twine==6.1.0
 tzdata==2025.2
-urllib3==2.4.0
+urllib3==2.5.0
 wheel==0.45.1
