@@ -29,5 +29,5 @@ six==1.17.0
 tqdm==4.67.1
 twine==6.1.0
 tzdata==2025.2
-urllib3==2.4.0
+urllib3==2.5.0
 wheel==0.45.1
