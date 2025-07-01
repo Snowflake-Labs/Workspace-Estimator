@@ -1,6 +1,7 @@
 import os
 
 from datetime import datetime, timedelta
+from typing import Any
 
 from tqdm.notebook import tqdm_notebook
 
@@ -9,13 +10,54 @@ from workspace_extractor.mapping import Mapping
 
 
 class Sizing(Manager):
-    def __init__(self, input_url, input_token=None, input_output="./output"):
+    def __init__(self, input_url: str, input_token: str | None = None, input_output: str = "./output") -> None:
+        """Initialize the Sizing instance for workspace resource estimation.
+
+        Extends the Manager class with specialized functionality for collecting
+        detailed workspace metrics, cluster events, and job run information
+        needed for sizing analysis and resource estimation.
+
+        Args:
+            input_url (str): Base URL for the Databricks workspace API endpoint.
+                Should be the full workspace URL (e.g., 'https://dbc-12345678-9abc.cloud.databricks.com').
+                Trailing slash will be removed if present.
+            input_token (str | None): Personal access token for authentication.
+                Must have appropriate permissions to read cluster, job, and workspace metadata.
+                Defaults to None.
+            input_output (str): Directory path for saving collected data files.
+                Directory will be created if it doesn't exist. All output files
+                will be saved in JSON format within this directory. Defaults to "./output".
+
+        Returns:
+            None
+
+        Side Effects:
+            - Calls parent Manager.__init__() with provided parameters
+            - Creates output directory if it doesn't exist
+            - Stores configuration for subsequent data collection operations
+
+        Inherited Attributes:
+            - self.url: Processed base URL for API calls
+            - self.token: Authentication token for API requests
+            - self.output: Output directory path
+            - self.api_utl: Utility instance for API operations
+            - self.results_count: Dictionary tracking collected record counts
+
+        Example:
+            # Initialize for a Databricks workspace
+            sizing = Sizing(
+                input_url="https://dbc-12345678-9abc.cloud.databricks.com",
+                input_token="dapi1234567890abcdef",
+                input_output="./workspace_data"
+            )
+
+        """
         super().__init__(input_url, input_token=input_token, input_output=input_output)
         self.token = input_token
         self.output = input_output
         os.makedirs(self.output, exist_ok=True)
 
-    def get_clusters_events(self, timestamp, pb=None):
+    def get_clusters_events(self, timestamp: int, pb: Any | None = None) -> tuple[bool, str]:
         """Fetch cluster lifecycle events for all clusters from a specified timestamp.
 
         This method retrieves detailed event information for each cluster in the workspace,
@@ -26,7 +68,7 @@ class Sizing(Manager):
             timestamp (int): Unix timestamp in milliseconds specifying the start time
                 for event collection. Events from this timestamp onwards will be fetched.
                 Typically calculated as: int(datetime.timestamp() * 1000)
-            pb (tqdm, optional): Progress bar instance for tracking overall progress.
+            pb (Any | None): Progress bar instance for tracking overall progress.
                 If provided, will be updated to show processing status. Defaults to None.
 
         Returns:
@@ -131,7 +173,7 @@ class Sizing(Manager):
 
         return result
 
-    def get_runs_details(self, pb=None) -> tuple[bool, str]:
+    def get_runs_details(self, pb: Any | None = None) -> tuple[bool, str]:
         """Fetch detailed information for all job runs in the workspace.
 
         This method retrieves comprehensive details for each job run identified in the workspace,
@@ -139,7 +181,7 @@ class Sizing(Manager):
         Each run's details are saved to individual files for analysis and reporting.
 
         Args:
-            pb (tqdm, optional): Progress bar instance for tracking overall progress.
+            pb (Any | None): Progress bar instance for tracking overall progress.
                 If provided, will be updated to show processing status. Defaults to None.
 
         Returns:
@@ -239,7 +281,94 @@ class Sizing(Manager):
 
         return result
 
-    def get_metadata(self, days=60):
+    def get_metadata(self, days: int | float = 60) -> None:
+        """Collect comprehensive workspace metadata for sizing analysis.
+
+        This method orchestrates the collection of all necessary workspace data
+        for resource estimation and analysis. It gathers cluster information,
+        job configurations, execution history, and detailed events from the
+        specified time period.
+
+        Args:
+            days (int | float): Number of days to look back for historical data.
+                Used to calculate the timestamp for cluster events and other
+                time-based data collection. Must be a positive number.
+                Defaults to 60 days.
+
+        Returns:
+            None
+
+        Data Collection Sequence:
+            1. **Node Types**: Available cluster node types and specifications
+            2. **Clusters**: All cluster configurations and current state
+            3. **Jobs**: Job definitions with expanded task configurations
+            4. **Job Runs**: Historical job execution records with task details
+            5. **SQL Warehouses**: SQL compute endpoint configurations
+            6. **Pipelines**: Delta Live Tables pipeline statuses
+            7. **SQL Queries**: SQL query execution history
+            8. **Cluster Events**: Detailed lifecycle events for all clusters
+            9. **Run Details**: Comprehensive details for each job run
+
+        API Endpoints Used:
+            - api/2.0/clusters/list-node-types: Available node types
+            - api/2.0/clusters/list: Cluster configurations
+            - api/2.2/jobs/list: Job definitions (with expanded tasks)
+            - api/2.1/jobs/runs/list: Job run history (with expanded tasks)
+            - api/2.0/sql/warehouses: SQL warehouse configurations
+            - api/2.0/pipelines: Delta Live Tables pipelines
+            - api/2.0/sql/history/queries: SQL query execution history
+            - api/2.0/clusters/events: Cluster lifecycle events (via get_clusters_events)
+            - api/2.1/jobs/runs/get: Individual run details (via get_runs_details)
+
+        Side Effects:
+            - Creates multiple JSON files in the output directory
+            - Updates self.results_count with record counts for each data type
+            - Displays progress bars for tracking collection status
+            - May take significant time depending on workspace size and history
+
+        Progress Tracking:
+            - Main progress bar shows overall collection progress (9 steps)
+            - Individual operations may show additional progress bars
+            - Cluster events and run details show nested progress for individual items
+
+        File Outputs:
+            - node_types.json: Available cluster node types
+            - clusters.json: Cluster configurations
+            - jobs.json: Job definitions
+            - runs.json: Job run history
+            - warehouses.json: SQL warehouse configurations
+            - pipelines.json: Pipeline configurations
+            - queries.json: SQL query history
+            - events_{cluster_id}.json: Events for each cluster
+            - runs_details_{run_id}.json: Details for each job run
+
+        Performance Considerations:
+            - Uses pagination for large datasets
+            - Sequential processing to respect API rate limits
+            - Progress tracking for long-running operations
+            - Automatic retry and error handling for individual API calls
+
+        Time Range:
+            - Most data collection is current state (clusters, jobs, warehouses)
+            - Historical data (events, runs) uses the specified days parameter
+            - Timestamp calculation: datetime.now() - timedelta(days=days)
+
+        Example:
+            # Collect 30 days of workspace data
+            sizing.get_metadata(days=30)
+
+            # Collect 90 days of data for comprehensive analysis
+            sizing.get_metadata(days=90)
+
+            # Use default 60-day collection period
+            sizing.get_metadata()
+
+        Note:
+            This method is typically the primary entry point for workspace
+            data collection and should be called after proper initialization
+            of the Sizing instance with valid URL and authentication token.
+
+        """
         with tqdm_notebook(range(9), desc="Processing...") as pb:
             date_days_ago = datetime.now() - timedelta(days=days)
             timestamp = int(date_days_ago.timestamp() * 1000)
