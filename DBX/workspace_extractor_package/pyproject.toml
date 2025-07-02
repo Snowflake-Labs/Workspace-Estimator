@@ -10,7 +10,7 @@ description = "Snowflake Wokspace Extractor is a Python package that provides a 
 dynamic = ['version']
 homepage = "https://www.snowflake.com/"
 license = {text = "Apache License, Version 2.0"}
-name = "workspace-extractor"
+name = "snow-workspace-extractor"
 readme = "README.md"
 requires-python = '>=3.10'
 
@@ -95,7 +95,7 @@ source = "regex"
 
 [[tool.hatch.sources]]
 dir = "src"
-name = "workspace-extractor"
+name = "snow-workspace-extractor"
 type = "package"
 
 [tool.hatch.envs.linter.scripts]
