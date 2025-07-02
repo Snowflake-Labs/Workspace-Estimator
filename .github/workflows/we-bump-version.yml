@@ -46,7 +46,7 @@ jobs:
         env:
           NEW_VERSION: ${{ steps.get_version.outputs.version }}
           FILE_NAME: __version__.py
-        working-directory: "${{ github.workspace }}/snowflake-data-validation"
+        working-directory: "${{ github.workspace }}/DBX/workspace_extractor_package"
 
       - name: Repository Setup
         run: |
