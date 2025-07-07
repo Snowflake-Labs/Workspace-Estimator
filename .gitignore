@@ -53,6 +53,9 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Project specific test directories
+DBX/workspace_extractor_package/tests/outcome/
+
 # Translations
 *.mo
 *.pot
@@ -205,4 +208,3 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
-
