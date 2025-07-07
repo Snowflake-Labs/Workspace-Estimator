@@ -113,5 +113,5 @@ check = [
 
 coverage = [
   'cd tests/outcome && pwd && ls -la',
-  'python ../../.github/scripts/test_get_coverage.py tests/outcome/coverage-{matrix:python:{env:PYTHON_VERSION:unset}}.json --threshold={env:COVERAGE_THRESHOLD} || { echo "❌ TESTS FAILED: Coverage is below the threshold of {env:COVERAGE_THRESHOLD}%. Please increase the coverage or adjust the threshold."; exit 1; }',
+  'python ../../.github/scripts/test_get_coverage.py tests/outcome/coverage-{matrix:python:{env:PYTHON_VERSION:unset}}.json --threshold={env:COVERAGE_THRESHOLD}',
 ]
