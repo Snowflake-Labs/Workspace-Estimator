@@ -102,3 +102,16 @@ type = "package"
 check = [
   "echo 'Running linting checks...' && ruff check --config=../../ruff.toml --statistics --verbose . || (echo '❌ LINTING FAILED: Please fix the above linting issues before proceeding. Use \"ruff check --config=../ruff.toml --fix .\" to auto-fix some issues, or fix them manually.' && exit 1)",
 ]
+
+[tool.hatch.envs.test.scripts]
+check = [
+  'python -m pip install --upgrade pip -q',
+  'pip install -q -e .[development]',
+  'pip list',
+  'pytest -vvv --junitxml=tests/outcome/test-results.xml --cov=src --cov-branch --cov-config=tests/.coveragerc --cov-report=xml:tests/outcome/coverage-{matrix:python:{env:PYTHON_VERSION:unset}}.xml {args:tests} --cov-report=term --cov-report=html:tests/outcome/coverage-{matrix:python:{env:PYTHON_VERSION:unset}}.html --cov-report=json:tests/outcome/coverage-{matrix:python:{env:PYTHON_VERSION:unset}}.json',
+]
+
+coverage = [
+  'cd tests/outcome && pwd && ls -la',
+  'python ../../.github/scripts/test_get_coverage.py tests/outcome/coverage-{matrix:python:{env:PYTHON_VERSION:unset}}.json --threshold={env:COVERAGE_THRESHOLD}',
+]

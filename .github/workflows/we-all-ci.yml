@@ -35,3 +35,9 @@ jobs:
     secrets: inherit
     with:
       artifact-name: workspace_extractor
+
+  test:
+    needs: build
+    name: Run tests workspace_extractor
+    uses: ./.github/workflows/we-test.yml
+    secrets: inherit
