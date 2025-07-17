@@ -19,7 +19,7 @@
 1. Log in to your Databricks workspace.
 
 2. Verify that you have the required permissions by navigating to the upper right corner of
-the screen. And click in the drop down. Select **Settings**.
+the screen. Click on the dropdown and select **Settings**.
 
 <figure><img src="./doc-images/settings.png" alt=""><figcaption></figcaption></figure>
 
