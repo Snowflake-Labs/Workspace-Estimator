@@ -10,7 +10,7 @@
 
 <figure><img src="./doc-images/notebook.png" alt=""><figcaption><p>Workspace Estimator IPYNB file</p></figcaption></figure>
 
-3. Click on download the file.
+3. Click to download the file.
 
 <figure><img src="./doc-images/notebook_download.png" alt=""><figcaption></figcaption></figure>
 
@@ -19,7 +19,7 @@
 1. Log in to your Databricks workspace.
 
 2. Verify that you have the required permissions by navigating to the upper right corner of
-the screen. And click in the drop down. Select **Settings**.
+the screen. Click on the dropdown and select **Settings**.
 
 <figure><img src="./doc-images/settings.png" alt=""><figcaption></figcaption></figure>
 
@@ -74,4 +74,4 @@ the screen. And click in the drop down. Select **Settings**.
 
 3. The output is not sent automatically, once downloaded the output is in a local zip file.
 
-4. When shared the zip file to your Account Executive the downloaded zip file will be use to generate the estimation.
+4. When sharing the zip file with your Account Executive, the downloaded zip file will be used to generate the estimation.
