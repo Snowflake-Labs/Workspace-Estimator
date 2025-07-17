@@ -74,7 +74,7 @@ the screen. And click in the drop down. Select **Settings**.
 
 3. The output is not sent automatically, once downloaded the output is in a local zip file.
 
-4. When shared the zip file to your Account Executive the downloaded zip file will be use to generate the estimation.
+4. When sharing the zip file with your Account Executive, the downloaded zip file will be used to generate the estimation.
 
 ## Support
 
