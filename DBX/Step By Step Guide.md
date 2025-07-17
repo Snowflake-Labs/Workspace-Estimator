@@ -75,7 +75,3 @@ the screen. And click in the drop down. Select **Settings**.
 3. The output is not sent automatically, once downloaded the output is in a local zip file.
 
 4. When shared the zip file to your Account Executive the downloaded zip file will be use to generate the estimation.
-
-## Support
-
-Feel free to reach out to [sma-support@snowflake.com](mailto:sma-support@snowflake.com) for more information.&#x20;
