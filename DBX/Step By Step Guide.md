@@ -10,7 +10,7 @@
 
 <figure><img src="./doc-images/notebook.png" alt=""><figcaption><p>Workspace Estimator IPYNB file</p></figcaption></figure>
 
-3. Click on download the file.
+3. Click to download the file.
 
 <figure><img src="./doc-images/notebook_download.png" alt=""><figcaption></figcaption></figure>
 
