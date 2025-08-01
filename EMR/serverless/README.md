@@ -89,7 +89,7 @@ EMR Studio is where you'll write and run your notebooks. You need a Studio to cr
 * **Studio Details.**
     * **Name:** Type a name for your Studio (e.g., `MyNotebookStudio`).
 
-<img src="./img/studio.png" alt="Screenshot of the EMR Studio interface. In the left-hand navigation menu, locate the 'EMR Studio' section and click on the 'Studios' link. Then, in the top-right part of the screen, find and click the orange 'Create Studio' button.">
+<img src="../img/studio.png" alt="Screenshot of the EMR Studio interface. In the left-hand navigation menu, locate the 'EMR Studio' section and click on the 'Studios' link. Then, in the top-right part of the screen, find and click the orange 'Create Studio' button.">
 
 ### Create EMR Serverless Application (If You Don't Have One)
 * Launch your Studio.
@@ -97,13 +97,13 @@ EMR Studio is where you'll write and run your notebooks. You need a Studio to cr
 * Select your studio.
 * Click the **Manage Applications** button.
 
-<img src="./img/launch.png" alt="Screenshot of the EMR Studio interface. In the left sidebar menu, click on 'EMR Serverless'. Once inside, in the 'EMR Studio' section, click the orange 'Manage applications' button to administer your applications.">
+<img src="../img/launch.png" alt="Screenshot of the EMR Studio interface. In the left sidebar menu, click on 'EMR Serverless'. Once inside, in the 'EMR Studio' section, click the orange 'Manage applications' button to administer your applications.">
 
 * **Create an Application.**
     * Click on **Applications**.
     * Click the **Create Application** button.
 
-<img src="./img/application.png" alt="Screenshot of the EMR Studio interface. Within the EMR Studio interface, in the left sidebar menu, select 'Applications'. Then, in the top-right part of the screen, find and click the orange 'Create application' button.">
+<img src="../img/application.png" alt="Screenshot of the EMR Studio interface. Within the EMR Studio interface, in the left sidebar menu, select 'Applications'. Then, in the top-right part of the screen, find and click the orange 'Create application' button.">
 
 * **Specify the application details.**
     * **Name:** A unique name for your application (e.g., `workspace-estimator-app`).
@@ -111,12 +111,12 @@ EMR Studio is where you'll write and run your notebooks. You need a Studio to cr
     * **Type:** Choose **Spark**.
     * **Initial capacity:** Configure the initial capacity based on your requirements. Consult the EMR Serverless User Guide for further details.
 
-<img src="./img/create_app.png" alt="Screenshot of the EMR Serverless application settings. Fields for entering the application 'Name', selecting the 'Type' as Spark, the EMR 'Release version', and adjusting the maximum capacity limits for 'CPU (vCPU)', 'Memory (GB)', and 'Disk (GB)' are highlighted. The option to use 'custom settings' for application configuration is also shown.">
+<img src="../img/create_app.png" alt="Screenshot of the EMR Serverless application settings. Fields for entering the application 'Name', selecting the 'Type' as Spark, the EMR 'Release version', and adjusting the maximum capacity limits for 'CPU (vCPU)', 'Memory (GB)', and 'Disk (GB)' are highlighted. The option to use 'custom settings' for application configuration is also shown.">
 
 * **Network and Security:**
     * **Network Configuration (Subnets & Security Groups):** Your application needs **subnets** in your VPC and **security groups** to enable connectivity. This allows your notebook to access data with Boto3, ensuring your code runs successfully.
 
-<img src="./img/network.png" alt="Screenshot of the network configuration interface. It displays fields for Virtual Private Cloud (VPC), Subnets, and Security groups. The 'subnet' and 'sg' fields are highlighted with masked values, indicating that a subnet and a security group have been selected.">
+<img src="../img/network.png" alt="Screenshot of the network configuration interface. It displays fields for Virtual Private Cloud (VPC), Subnets, and Security groups. The 'subnet' and 'sg' fields are highlighted with masked values, indicating that a subnet and a security group have been selected.">
 
 ### Create EMR Studio Workspace (If You Don't Have One)
 * Launch your Studio.
@@ -124,38 +124,38 @@ EMR Studio is where you'll write and run your notebooks. You need a Studio to cr
 * Select your studio.
 * Click the **Manage Applications** button.
 
-<img src="./img/launch.png" alt="Screenshot of the EMR Studio interface. In the left sidebar menu, click on 'EMR Serverless'. Once inside, in the 'EMR Studio' section, click the orange 'Manage applications' button to administer your applications.">
+<img src="../img/launch.png" alt="Screenshot of the EMR Studio interface. In the left sidebar menu, click on 'EMR Serverless'. Once inside, in the 'EMR Studio' section, click the orange 'Manage applications' button to administer your applications.">
 
 * **Create Workspace.**
     * Click on **Workspaces**.
     * Click the **Create Workspace** button.
 
-<img src="./img/workspace.png" alt="Screenshot of the EMR Studio interface. Within the EMR Studio interface, in the left sidebar menu, click on 'Workspaces'. Then, in the top-right part of the screen, find and click the orange 'Create Workspace' button.">
+<img src="../img/workspace.png" alt="Screenshot of the EMR Studio interface. Within the EMR Studio interface, in the left sidebar menu, click on 'Workspaces'. Then, in the top-right part of the screen, find and click the orange 'Create Workspace' button.">
 
 * **Specify the workspace details.**
     * Provide a name for your workspace (e.g., `estimator-workspace`).
 
-<img src="./img/create_workspace.png" alt="Screenshot of the 'Create a Workspace' form. The 'Workspace name' field is highlighted, where you need to enter a name for your new Workspace.">
+<img src="../img/create_workspace.png" alt="Screenshot of the 'Create a Workspace' form. The 'Workspace name' field is highlighted, where you need to enter a name for your new Workspace.">
 
 ### Import The Notebook And Set Up The Environment
 * Open the workspace.
 * Select your workspace.
 * Click on **Quick launch** button.
 
-<img src="./img/launch_workspace.png" alt="Screenshot of the EMR Studio Workspaces view. Once in the Workspaces view, select the desired Workspace. Then, in the top right, click the arrow next to the 'Launch Workspace' button and choose the 'Quick launch' option.">
+<img src="../img/launch_workspace.png" alt="Screenshot of the EMR Studio Workspaces view. Once in the Workspaces view, select the desired Workspace. Then, in the top right, click the arrow next to the 'Launch Workspace' button and choose the 'Quick launch' option.">
 
 * **Set up the Compute type.**
     * In the second button of the left sidebar, you will find the section called **Compute**.
     * Select the type named **EMR Serverless application**.
     * Choose your application and the role with the policy you created above
 
-<img src="./img/setup_compute.png" alt="Screenshot of the Jupyter environment in EMR Studio. In the left sidebar, click the second icon from the top, which represents the 'Compute' section. Within this section, select the option 'EMR Serverless application' and then use the dropdowns to choose your Serverless application and the interactive runtime role.">
+<img src="../img/setup_compute.png" alt="Screenshot of the Jupyter environment in EMR Studio. In the left sidebar, click the second icon from the top, which represents the 'Compute' section. Within this section, select the option 'EMR Serverless application' and then use the dropdowns to choose your Serverless application and the interactive runtime role.">
 
 * In the workspace environment, upload or import the workspace estimator notebook.
 * In the first button of the left sidebar, you will find the file explorer.
 * Click on the import button and select the notebook file.
 
-<img src="./img/import_file.png" alt="Screenshot of the EMR Studio environment. In the left sidebar, click the first icon from the top, which represents the file explorer. Then, find and click the 'Import' button (an upward arrow icon) and select your notebook file to upload it.">
+<img src="../img/import_file.png" alt="Screenshot of the EMR Studio environment. In the left sidebar, click the first icon from the top, which represents the file explorer. Then, find and click the 'Import' button (an upward arrow icon) and select your notebook file to upload it.">
 
 ### Execute The Workspace Estimator Notebook
 * Open the uploaded notebook.
@@ -177,4 +177,4 @@ EMR Studio is where you'll write and run your notebooks. You need a Studio to cr
     * Once the execution is complete, the last cell of the notebook should display a download button.
     * Click this button to download the generated ZIP file, which will contain all the organized metrics and cost information for your subsequent analysis.
 
-<img src="./img/button.png" alt="Screenshot of the EMR Studio notebook execution. Once the Notebook execution is complete, in the last cell, find and click the blue 'Download Analysis Data' button to download the ZIP file containing the generated metrics and cost information.">
+<img src="../img/button.png" alt="Screenshot of the EMR Studio notebook execution. Once the Notebook execution is complete, in the last cell, find and click the blue 'Download Analysis Data' button to download the ZIP file containing the generated metrics and cost information.">
