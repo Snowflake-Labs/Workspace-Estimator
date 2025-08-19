@@ -60,7 +60,7 @@ development = [
   "pytest>=8.3.3",
   "pytest-cov>=6.0.0",
   "coverage>=7.6.7",
-  "twine==5.1.1",
+  "twine==6.1.0",
   "hatchling==1.25.0",
   "pre-commit>=4.0.1",
   "setuptools>=70.0.0",
