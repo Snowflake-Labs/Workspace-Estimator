@@ -2,4 +2,4 @@
 # These match the dependencies defined in pyproject.toml
 tqdm==4.67.1
 requests==2.32.4
-pandas==2.2.3
+pandas==2.3.2

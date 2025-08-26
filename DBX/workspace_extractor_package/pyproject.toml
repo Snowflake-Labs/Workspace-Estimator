@@ -52,7 +52,7 @@ keywords = [
 dependencies = [
   "tqdm==4.67.1",
   "requests==2.32.4",
-  "pandas==2.2.3",
+  "pandas==2.3.2",
 ]
 
 [project.optional-dependencies]
