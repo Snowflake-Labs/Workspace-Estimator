@@ -76,6 +76,34 @@ class Manager:
         print(f"The following information was collected by the Workspace Estimator for the last {days} days")
         for key, value in self.results_count.items():
             print(f"{key.upper().ljust(10)}:\t{value}")
+        self.results_count["date_range"] = days
+        self.write_results_count_json()
+
+    def write_results_count_json(self, filename: str = "summary") -> None:
+        """Write the results_count dictionary to a JSON file using the Util class.
+
+        Saves the current results_count dictionary containing the counts of different
+        data types collected to a JSON file in the configured output directory.
+
+        Args:
+            filename (str): Name of the output file (without extension).
+                Defaults to "results_count".
+
+        Returns:
+            None
+
+        Side Effects:
+            - Creates a JSON file in the output directory
+            - File will be named "{filename}.json"
+
+        Example:
+            manager.write_results_count_json("summary_counts")
+            # Creates: ./output/summary_counts.json
+
+        """
+        self.api_utl.write_file_request_(
+            self.output, filename, self.results_count
+        )  # Write with default filename (results_count.json)
 
     def generator(self) -> Generator[None, None, None]:
         """Create an infinite generator for pagination loops.
