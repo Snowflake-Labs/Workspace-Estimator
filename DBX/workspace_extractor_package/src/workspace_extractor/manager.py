@@ -101,7 +101,7 @@ class Manager:
             # Creates: ./output/summary_counts.json
 
         """
-        self.api_utl.write_file_request_(
+        Util.write_file_request_(
             self.output, filename, self.results_count
         )  # Write with default filename (results_count.json)
 
