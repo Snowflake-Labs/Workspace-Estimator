@@ -87,7 +87,7 @@ class Manager:
 
         Args:
             filename (str): Name of the output file (without extension).
-                Defaults to "results_count".
+                Defaults to "summary".
 
         Returns:
             None
@@ -101,9 +101,7 @@ class Manager:
             # Creates: ./output/summary_counts.json
 
         """
-        Util.write_file_request_(
-            self.output, filename, self.results_count
-        )  # Write with default filename (results_count.json)
+        Util.write_file_request_(self.output, filename, self.results_count)
 
     def generator(self) -> Generator[None, None, None]:
         """Create an infinite generator for pagination loops.
