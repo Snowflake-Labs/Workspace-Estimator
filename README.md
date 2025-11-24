@@ -13,4 +13,10 @@ These scripts are licensed under the [Apache license](./LICENSE.txt).
 - Account with admin privilege in the workspace.
 
 ## How to
-Please follow instructions in the [step by step guide](./Step%20By%20Step%20Guide.pdf).
+Please follow instructions: 
+
+- [DBX](./DBX/README.md).
+
+- EMR
+  - [EC2](./EMR/ec2/README.md).
+  - [Serverless](./EMR/serverless/README.md).
